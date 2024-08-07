@@ -44,7 +44,7 @@ public class AuthenticationController {
         if(this.repository.findByLogin(data.login()) != null) return new Usuario();
 
         String eP = new BCryptPasswordEncoder().encode(data.password());
-        Usuario newUser = new Usuario(data.nome(), data.login(), eP , data.role());
+        Usuario newUser = new Usuario(data.nome(), data.login(), eP , data.cpf(), data.telefone());
 
         repository.save(newUser);
 
