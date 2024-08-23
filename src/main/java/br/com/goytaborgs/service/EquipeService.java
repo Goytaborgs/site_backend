@@ -35,6 +35,7 @@ public class EquipeService {
         equipe.setInstituicao(dto.instituicao());
         equipe.setNomeequipe(dto.nomeequipe());
         equipe.setNumerodemembros(1);
+        equipe.setNumeroderobos(0);
         equipe.setRobos(robos);
         equipe.setCapitaoid(user.getId());
         List<Usuario> integrantes = new ArrayList<>();

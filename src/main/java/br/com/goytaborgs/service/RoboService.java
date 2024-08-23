@@ -37,6 +37,7 @@ public class RoboService {
         List<Robo> robos = equipe.getRobos();
         robos.add(robo);
         equipe.setRobos(robos);
+        equipe.setNumeroderobos(equipe.getNumeroderobos()+1);
         equipeRepository.save(equipe);
         return robo;
 

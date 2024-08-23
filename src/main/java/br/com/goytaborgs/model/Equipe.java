@@ -39,6 +39,9 @@ public class Equipe {
     @OneToMany(mappedBy = "equipe")
     @JsonManagedReference(value = "robos")
     private List<Robo> robos;
+    @Column
+    private int numeroderobos;
+
     public Long getId() {
         return id;
     }
@@ -89,6 +92,12 @@ public class Equipe {
         this.capitaoid = capitaoid;
         this.numerodemembros = numerodemembros;
         this.robos = robos;
+    }
+    public int getNumeroderobos() {
+        return numeroderobos;
+    }
+    public void setNumeroderobos(int numeroderobos) {
+        this.numeroderobos = numeroderobos;
     }
 
 
