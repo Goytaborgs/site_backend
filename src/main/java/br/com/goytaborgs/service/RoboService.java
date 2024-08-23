@@ -26,6 +26,35 @@ public class RoboService {
     private EquipeRepository equipeRepository;
 
     public Robo criarRobo(HttpServletRequest request, CadastrarRoboDTO dto) {
+        if (dto.categoria().equals("Cupim")) {
+            List<Robo> listaDeRObos = roboRepository.findByCategoria("Cupim");
+            if (listaDeRObos.size()>10) {
+                return null;
+            }
+        } else {
+            if (dto.categoria().equals("Seguidor de linha")) {
+                List<Robo> listaDeRObos = roboRepository.findByCategoria("Seguidor de linha");
+                if (listaDeRObos.size()>10) {
+                    return null;
+                }
+            }
+            else {
+                if (dto.categoria().equals("Sumo mini auto")) {
+                    List<Robo> listaDeRObos = roboRepository.findByCategoria("Sumo mini auto");
+                    if (listaDeRObos.size()>10) {
+                        return null;
+                    }
+                }
+                else {
+                    if (dto.categoria().equals("Fairyweight")) {
+                        List<Robo> listaDeRObos = roboRepository.findByCategoria("Fairyweight");
+                        if (listaDeRObos.size()>10) {
+                            return null;
+                        }
+                    }
+                }
+            }
+        }
         String authHeader = request.getHeader("Authorization");
         Usuario user = authorizationService.findUserByToken(authHeader);
         Equipe equipe = user.getEquipe();

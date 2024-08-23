@@ -63,6 +63,10 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public ResponseEntity<LoginResponseDTO> register(@RequestBody @Valid RegisterDTO data){
+        List<Usuario> usuariosList = repository.findAll();
+        if (usuariosList.size()>119) {
+            return ResponseEntity.badRequest().body(null);
+        }
         if(this.repository.findByLogin(data.login()) != null) return ResponseEntity.badRequest().body(null);
 
         String eP = new BCryptPasswordEncoder().encode(data.password());
