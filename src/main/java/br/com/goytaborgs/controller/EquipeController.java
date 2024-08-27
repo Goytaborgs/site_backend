@@ -31,7 +31,7 @@ public class EquipeController {
     @PostMapping
     public ResponseEntity<Equipe> criarEquipe(HttpServletRequest request, @RequestBody EquipeRequestDTO dto) {
         Equipe novaEquipe = equipeService.criarEquipe(request, dto);
-        if (novaEquipe!=null) {
+        if (novaEquipe==null) {
             return ResponseEntity.status(403).build();
         }
         return ResponseEntity.ok(novaEquipe);
