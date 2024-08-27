@@ -29,7 +29,12 @@ public class EquipeService {
     public Equipe criarEquipe(HttpServletRequest request, EquipeRequestDTO dto) {
         String authHeader = request.getHeader("Authorization");
         Usuario user = authorizationService.findUserByToken(authHeader);
-
+        List<Equipe> equipes = equipeRepository.findAll();
+        for (Equipe e: equipes) {
+            if (e.getNomeequipe().toLowerCase().equals(dto.nomeequipe().toLowerCase())) {
+                return null;
+            }
+        }
         List<Robo> robos = new ArrayList<>();
         Equipe equipe = new Equipe();
         equipe.setInstituicao(dto.instituicao());

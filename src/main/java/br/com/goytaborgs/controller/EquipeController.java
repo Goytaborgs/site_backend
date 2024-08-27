@@ -2,6 +2,7 @@ package br.com.goytaborgs.controller;
 
 import java.util.List;
 
+import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -30,6 +31,9 @@ public class EquipeController {
     @PostMapping
     public ResponseEntity<Equipe> criarEquipe(HttpServletRequest request, @RequestBody EquipeRequestDTO dto) {
         Equipe novaEquipe = equipeService.criarEquipe(request, dto);
+        if (novaEquipe!=null) {
+            return ResponseEntity.status(403).build();
+        }
         return ResponseEntity.ok(novaEquipe);
     }
 
