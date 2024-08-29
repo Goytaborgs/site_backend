@@ -19,12 +19,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import br.com.goytaborgs.model.Equipe;
 import br.com.goytaborgs.DTO.AuthenticationDTO;
+import br.com.goytaborgs.DTO.EmailDTO;
 import br.com.goytaborgs.DTO.LoginResponseDTO;
 import br.com.goytaborgs.DTO.RegisterDTO;
+import br.com.goytaborgs.DTO.ResetPasswordDTO;
 import br.com.goytaborgs.infra.TokenService;
 import br.com.goytaborgs.model.Usuario;
 import br.com.goytaborgs.repository.EquipeRepository;
 import br.com.goytaborgs.repository.UsuarioRepository;
+import br.com.goytaborgs.service.EmailService;
 import jakarta.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -42,6 +45,8 @@ public class AuthenticationController {
     TokenService tokenService;
     @Autowired
     private EquipeRepository equipeRepository;
+    @Autowired
+    private EmailService emailService;
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid AuthenticationDTO data){
@@ -78,4 +83,37 @@ public class AuthenticationController {
         var token = tokenService.generateToken((Usuario) auth.getPrincipal());
         return ResponseEntity.ok(new LoginResponseDTO(token, false));
     }
+    @PostMapping("/forgot-password")
+     public ResponseEntity<String> forgotPassword(@RequestBody @Valid EmailDTO emailDTO) {
+         Usuario optionalUser = repository.findByLogin(emailDTO.email());
+         if (optionalUser!=null) {
+             Usuario user = optionalUser;
+             String token = tokenService.generateToken(user);
+             String resetLink = "https://goytaborgs.com.br/reset-password.html?token=" + token;
+             emailService.enviaEmail(user.getUsername(), resetLink, user.getNome());
+             
+             return ResponseEntity.ok("Te enviamos um link para mudar a senha por email.");
+         } else {
+             return ResponseEntity.status(404).body("Seu email não foi encontrado na nossa base de dados");
+         }
+     }
+     @PostMapping("/reset-password")
+     public ResponseEntity<String> resetPassword(@RequestBody @Valid ResetPasswordDTO resetPasswordDTO) {
+         String username = tokenService.validateToken(resetPasswordDTO.token());
+         if (username==null) {
+             return ResponseEntity.status(401).body("Seu link expirou");
+         }
+
+         Usuario optionalUser = repository.findByLogin(username);
+         if (optionalUser!=null) {
+             Usuario user = optionalUser;
+             String encodedPassword = new BCryptPasswordEncoder().encode(resetPasswordDTO.newPassword());      
+             user.setPassword(encodedPassword);
+             repository.save(user);
+
+             return ResponseEntity.ok("Sua senha foi alterada com sucesso!");
+         } else {
+             return ResponseEntity.status(404).body("Não foi possível alterar sua senha, tente novamente.");
+         }
+     }
 }
