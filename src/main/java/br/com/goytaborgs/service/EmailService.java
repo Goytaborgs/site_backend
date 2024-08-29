@@ -27,7 +27,7 @@ public class EmailService {
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
-            helper.setFrom("goytaborgs1@gmail.com");
+            helper.setFrom("goytaborgscontato@gmail.com");
             helper.setSubject("Recuperação de Senha");
             helper.setTo(to);
 
